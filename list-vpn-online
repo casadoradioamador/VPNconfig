@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cat /var/log/openvpn/status.log | \
+grep -v "fddd" | \
+grep -v "CLIENT_LIST" | \
+grep -A 1000  "Virtual Address" | \
+grep -v "Virtual"  | \
+grep -v "GLOBAL" | \
+grep -v "Max" | \
+grep -v "END" | \
+awk '{split($0,a,","); printf "%-10s | %s\n", a[3],a[2]}' > /tmp/list-vpn-online.log
+cat /tmp/list-vpn-online.log | sort -V
+#cut -d ',' -f 1 2
+#'{ printf "%10s %-10s\n", $2, $2 }'
