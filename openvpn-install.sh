@@ -261,6 +261,7 @@ ssbzSibBsu/6iGtCOGEoXJf//////////wIBAg==
 -----END DH PARAMETERS-----' > /etc/openvpn/server/dh.pem
 	# Generate server.conf
 	echo "local $ip
+client-config-dir /etc/openvpn/ccd
 port $port
 proto $protocol
 dev tun
@@ -316,14 +317,16 @@ server 10.0.0.0 255.255.128.0" > /etc/openvpn/server/server.conf
 			echo 'push "dhcp-option DNS 94.140.15.15"' >> /etc/openvpn/server/server.conf
 		;;
 	esac
-	echo "keepalive 10 120
+	echo "keepalive 10 60
 cipher AES-256-CBC
 user nobody
 group $group_name
 persist-key
 persist-tun
 verb 3
-crl-verify crl.pem" >> /etc/openvpn/server/server.conf
+crl-verify crl.pem
+log-append /var/log/openvpn/openvpn.log
+status /var/log/openvpn/status.log" >> /etc/openvpn/server/server.conf
 	if [[ "$protocol" = "udp" ]]; then
 		echo "explicit-exit-notify" >> /etc/openvpn/server/server.conf
 	fi
